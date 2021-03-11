@@ -1,0 +1,8 @@
+/blogBackend/backend/__pycache__/*
+/blogBackend/backend/blog/migrations/*
+
+/venv
+
+/blog/yarn.lock
+/blog/node_modules
+/blog/public
