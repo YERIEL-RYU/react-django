@@ -6,3 +6,4 @@
 /blog/yarn.lock
 /blog/node_modules
 /blog/public
+/blog/.prettierrc
