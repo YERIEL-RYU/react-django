@@ -3,7 +3,7 @@
 
 /venv
 
-/blog/yarn.lock
-/blog/node_modules
-/blog/public
-/blog/.prettierrc
+/front/yarn.lock
+/front/node_modules
+/front/public
+/front/.prettierrc
