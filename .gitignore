@@ -4,6 +4,6 @@
 /venv
 
 /front/yarn.lock
-/front/node_modules
-/front/public
+/front/node_modules/*
+/front/public/*
 /front/.prettierrc

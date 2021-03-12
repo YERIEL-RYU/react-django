@@ -38,7 +38,7 @@ const useStyles2 = makeStyles({
   },
 });
 
-export default function TablePresenter() {
+export default function TablePresenter({onPost}) {
   const classes = useStyles2();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -59,6 +59,7 @@ export default function TablePresenter() {
       <Table className={classes.table} aria-label="custom pagination table">
       <TableHead>
           <TableRow>
+            <TableCell></TableCell>
             <TableCell>제목</TableCell>
             <TableCell> 작성 날짜 </TableCell>
             <TableCell> 작성자 </TableCell>
@@ -69,7 +70,10 @@ export default function TablePresenter() {
             ? rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
             : rows
           ).map((row) => (
-            <TableRow key={row.name}>
+            <TableRow key={row.name} onClick={onPost}>
+              <TableCell component="th" scope="row" >
+                중요
+              </TableCell>
               <TableCell component="th" scope="row" >
                 {row.name}
               </TableCell>
@@ -92,7 +96,7 @@ export default function TablePresenter() {
           <TableRow>
             <TablePagination
               rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
-              colSpan={3}
+              colSpan={4}
               count={rows.length}
               rowsPerPage={rowsPerPage}
               page={page}

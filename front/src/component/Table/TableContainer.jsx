@@ -2,9 +2,9 @@ import React from 'react';
 import TablePresenter from './TablePresenter';
 
 
-const TableContainer = () => {
+const TableContainer = ({onPost}) => {
     return (
-        <TablePresenter />
+        <TablePresenter onPost={onPost}/>
     );
 };
 
