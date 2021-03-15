@@ -1,30 +1,54 @@
 import React, { useState } from 'react';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableRow from '@material-ui/core/TableRow';
-import TableHead from '@material-ui/core/TableHead';
 import { Button, Checkbox, Input } from '@material-ui/core';
 
 import ReactQill from 'react-quill'
 import 'react-quill/dist/quill.snow.css';
 
+import styled from 'styled-components';
+const Title = styled(Input)`
+    margin : 0 30px;
+    padding-left : 10px;
+    padding-right : 10px;
+    padding-top : 20px;
+`;
+const CheckboxContainer = styled.div`
+    display : flex;
+    align-items: center;
+    justify-content: center;
+    margin : 20px 0;
+`;
+const ButtonContainer = styled.div`
+    display : flex;
+    justify-content : space-between;
+`
+
 const WritePresenter = () => {
     const [value, setValue] = useState('')
     const [title, setTitle] = useState('')
     const [important, setImportant] = useState(false)
+
+    const onChangeTitle = (e) => {
+        setTitle(e.target.value)
+    }
+
+    const onChangeValue = (e) => {
+        setValue(e.target.value)
+    }
+
+    const onCheckToggle = () => {
+        setImportant(!important)
+    }
     return (
         <div>
-            <Input fullWidth placeholder="TITEL" value={title}/>
-            <ReactQill style={{height:'400px', margin:'30px', padding:'10px'}} value={value}/>
-            <div>
-                <Checkbox value={important}/> 중요
-            </div>
-            <div>
+            <Title fullWidth placeholder="제목을 입력하세요." value={title} onChange={onChangeTitle}/>
+            <ReactQill style={{height:'400px', margin:'30px', padding:'10px'}} value={value} onChange={onChangeValue}/>
+            <CheckboxContainer>
+                <Checkbox value={important} onClick={onCheckToggle}/> 중요
+            </CheckboxContainer>
+            <ButtonContainer>
                 <Button variant='contained' >cancel</Button>
                 <Button variant='contained' >post</Button>
-            </div>
+            </ButtonContainer>
         </div>
     );
 };

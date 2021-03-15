@@ -2,28 +2,35 @@ import React from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
+import { Link } from 'react-router-dom';
 
 import styled from 'styled-components';
 
 const Header = styled.div``;
 const Title = styled.div`
-    padding : 1px;
+  padding: 1px;
+`;
+const Post = styled(Link)`
+  font-size: x-large;
+  font-weight: 600;
+  text-decoration-line: none;
+  color: black;
 `;
 
-
-const index = ({ children }) => {
+const index = (props) => {
+  console.log(props);
   return (
     <>
       <CssBaseline />
       <Container maxWidth="lg">
         <Header className="header">
-          <h1>POST</h1>
+          <Post to="/">POST</Post>
         </Header>
         <Divider />
         <Title className="title">
           <h3>공지사항</h3>
         </Title>
-        {children}
+        {props.children}
       </Container>
     </>
   );
