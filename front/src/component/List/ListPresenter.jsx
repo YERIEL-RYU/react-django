@@ -5,10 +5,10 @@ import Table from '../Table'
 
 
 const ListPresenter = (props) => {
-  const {onWrite, onPost} = props;
+  const {onWrite, onPost, posts} = props;
   return (
     <>
-      <Table onPost={onPost}/>
+      <Table onPost={onPost} posts={posts}/>
       <Button type='button' variant='contained' onClick={onWrite}>글쓰기</Button>
     </>
   );

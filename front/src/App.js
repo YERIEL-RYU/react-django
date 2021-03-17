@@ -1,10 +1,10 @@
-import React from 'react';
-import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
+import React from "react";
+import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
 
-import Layout from './component/Layout';
-import List from './component/List';
-import Post from './component/Post';
-import Write from './component/Write';
+import Layout from "./component/Layout";
+import List from "./component/List";
+import Post from "./component/Post";
+import Write from "./component/Write";
 
 const App = () => {
   return (
