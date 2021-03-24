@@ -11,6 +11,7 @@ class PostViewSet(mixins.UpdateModelMixin,
                   mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                   mixins.CreateModelMixin,
+                  mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter]
     ordering_fields = ['updated_at']
