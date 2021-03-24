@@ -40,17 +40,18 @@ const ButtonWrap = styled.div`
   justify-content: space-between;
 `;
 const PostPresenter = (props) => {
-  const { onList, onNext, onPrev, ListLen } = props;
+  const { onList, onNext, onPrev, post } = props;
   return (
     <>
-      <Title>TITLE</Title>
+      {console.log(post.title)}
+      <Title>{post.title}</Title>
       <Divider />
       <Info>
-        <Writer>yeriel</Writer>
-        <Date>today</Date>
+        <Writer>{post.writer}</Writer>
+        <Date>{post.updated_at}</Date>
       </Info>
       <Divider />
-      <Content>내용</Content>
+      <Content>{post.body}</Content>
       <Divider />
       <ButtonContainer>
         <ManageButtonWrap>
@@ -60,13 +61,13 @@ const PostPresenter = (props) => {
           </Button>
         </ManageButtonWrap>
         <ButtonWrap>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={onPrev}>
             이전글
           </Button>
           <Button variant="contained" color="primary" onClick={onList}>
             목록
           </Button>
-          <Button variant="contained" color="primary">
+          <Button variant="contained" color="primary" onClick={onNext}>
             다음글
           </Button>
         </ButtonWrap>
