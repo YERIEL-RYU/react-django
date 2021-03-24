@@ -52,7 +52,7 @@ const PostPresenter = (props) => {
             <Date>{post.updated_at}</Date>
           </Info>
           <Divider />
-          <Content>{post.body}</Content>
+          <Content dangerouslySetInnerHTML={{ __html: post.body }}></Content>
           <Divider />
           <ButtonContainer>
             <ManageButtonWrap>
