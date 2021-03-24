@@ -15,6 +15,7 @@ const ListContainer = () => {
       pathname: `/post/${id}`,
       pushState: { id: id, listLen: posts.length },
     });
+    localStorage.setItem("postId", id);
   };
   const onList = () => {
     axios.get(url).then((response) => {

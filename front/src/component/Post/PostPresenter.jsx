@@ -43,35 +43,38 @@ const PostPresenter = (props) => {
   const { onList, onNext, onPrev, post } = props;
   return (
     <>
-      {console.log(post.title)}
-      <Title>{post.title}</Title>
-      <Divider />
-      <Info>
-        <Writer>{post.writer}</Writer>
-        <Date>{post.updated_at}</Date>
-      </Info>
-      <Divider />
-      <Content>{post.body}</Content>
-      <Divider />
-      <ButtonContainer>
-        <ManageButtonWrap>
-          <Button variant="contained">수정</Button>
-          <Button variant="contained" color="secondary">
-            삭제
-          </Button>
-        </ManageButtonWrap>
-        <ButtonWrap>
-          <Button variant="contained" color="primary" onClick={onPrev}>
-            이전글
-          </Button>
-          <Button variant="contained" color="primary" onClick={onList}>
-            목록
-          </Button>
-          <Button variant="contained" color="primary" onClick={onNext}>
-            다음글
-          </Button>
-        </ButtonWrap>
-      </ButtonContainer>
+      {post !== undefined && (
+        <>
+          <Title>{post.title}</Title>
+          <Divider />
+          <Info>
+            <Writer>{post.writer}</Writer>
+            <Date>{post.updated_at}</Date>
+          </Info>
+          <Divider />
+          <Content>{post.body}</Content>
+          <Divider />
+          <ButtonContainer>
+            <ManageButtonWrap>
+              <Button variant="contained">수정</Button>
+              <Button variant="contained" color="secondary">
+                삭제
+              </Button>
+            </ManageButtonWrap>
+            <ButtonWrap>
+              <Button variant="contained" color="primary" onClick={onPrev}>
+                이전글
+              </Button>
+              <Button variant="contained" color="primary" onClick={onList}>
+                목록
+              </Button>
+              <Button variant="contained" color="primary" onClick={onNext}>
+                다음글
+              </Button>
+            </ButtonWrap>
+          </ButtonContainer>
+        </>
+      )}
     </>
   );
 };

@@ -8,12 +8,15 @@ const PostContainer = () => {
   const history = useHistory();
   const location = useLocation();
 
-  const postId = Number(location.pushState.id);
+  const postId = Number(localStorage.getItem("postId"));
   const listLen = localStorage.getItem("postLen");
   const url = `http://localhost:8000/post/${postId}/`;
 
   const [post, setPost] = useState();
 
+  useEffect(() => {
+    onPost();
+  }, []);
   useEffect(() => {
     onPost();
   }, [postId]);
@@ -34,6 +37,7 @@ const PostContainer = () => {
         pathname: `/post/${postId + 1}`,
         pushState: { id: postId + 1, listLen: listLen },
       });
+      localStorage.setItem("postId", postId + 1);
     } else {
       alert("마지막 글입니다.");
     }
@@ -44,6 +48,7 @@ const PostContainer = () => {
         pathname: `/post/${postId - 1}`,
         pushState: { id: postId - 1, listLen: listLen },
       });
+      localStorage.setItem("postId", postId - 1);
     } else {
       alert("첫 번째 글입니다.");
     }
