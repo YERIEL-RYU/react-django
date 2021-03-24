@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 import PostPresenter from "./PostPresenter";
 import { useHistory } from "react-router";
-import { useLocation } from "react-router";
 import axios from "axios";
 
 const PostContainer = () => {
   const history = useHistory();
-  const location = useLocation();
 
   const postId = Number(localStorage.getItem("postId"));
   const listLen = localStorage.getItem("postLen");
@@ -53,6 +51,15 @@ const PostContainer = () => {
       alert("첫 번째 글입니다.");
     }
   };
+  const onDelete = () => {
+    const check = window.confirm("해당 공지사항을 삭제하시겠습니까?");
+    if (check) {
+      axios.delete(url).then((res) => {
+        alert("삭제 되었습니다.");
+        history.push("/");
+      });
+    }
+  };
   return (
     <PostPresenter
       onList={onList}
@@ -60,6 +67,7 @@ const PostContainer = () => {
       onPrev={onPrev}
       listLen={listLen}
       post={post}
+      onDelete={onDelete}
     />
   );
 };
