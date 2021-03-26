@@ -40,7 +40,7 @@ const ButtonWrap = styled.div`
   justify-content: space-between;
 `;
 const PostPresenter = (props) => {
-  const { onList, onNext, onPrev, post, onDelete } = props;
+  const { onList, onNext, onPrev, post, onDelete, onModify } = props;
   return (
     <>
       {post !== undefined && (
@@ -56,7 +56,9 @@ const PostPresenter = (props) => {
           <Divider />
           <ButtonContainer>
             <ManageButtonWrap>
-              <Button variant="contained">수정</Button>
+              <Button variant="contained" onClick={onModify}>
+                수정
+              </Button>
               <Button variant="contained" color="secondary" onClick={onDelete}>
                 삭제
               </Button>

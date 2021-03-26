@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import PostPresenter from "./PostPresenter";
 import { useHistory } from "react-router";
 import axios from "axios";
@@ -8,6 +8,7 @@ const PostContainer = () => {
 
   const postId = Number(localStorage.getItem("postId"));
   const listLen = localStorage.getItem("postLen");
+
   const url = `http://localhost:8000/post/${postId}/`;
 
   const [post, setPost] = useState();
@@ -22,7 +23,10 @@ const PostContainer = () => {
   const onPost = () => {
     axios
       .get(url)
-      .then((response) => setPost(response.data))
+      .then((response) => {
+        setPost(response.data);
+        localStorage.setItem("post", response.data);
+      })
       .catch((error) => alert(error.response));
   };
 
@@ -30,10 +34,10 @@ const PostContainer = () => {
     history.push("/");
   };
   const onNext = () => {
+    console.log("postId : ", postId, "listLen : ", listLen);
     if (postId < listLen) {
       history.push({
         pathname: `/post/${postId + 1}`,
-        pushState: { id: postId + 1, listLen: listLen },
       });
       localStorage.setItem("postId", postId + 1);
     } else {
@@ -60,6 +64,12 @@ const PostContainer = () => {
       });
     }
   };
+  const onModify = useCallback(() => {
+    history.push("/write");
+    localStorage.setItem("title", post.title);
+    localStorage.setItem("body", post.body);
+    localStorage.setItem("imp", post.important);
+  }, [post]);
   return (
     <PostPresenter
       onList={onList}
@@ -68,6 +78,7 @@ const PostContainer = () => {
       listLen={listLen}
       post={post}
       onDelete={onDelete}
+      onModify={onModify}
     />
   );
 };

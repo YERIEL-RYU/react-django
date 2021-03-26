@@ -13,7 +13,7 @@ const App = () => {
         <Switch>
           <Route exact path="/" component={List} />
           <Route path="/post" component={Post} />
-          <Route path="/Write" component={Write} />
+          <Route path="/write" component={Write} />
         </Switch>
       </Layout>
     </BrowserRouter>
