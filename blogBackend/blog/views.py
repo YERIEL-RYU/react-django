@@ -22,9 +22,8 @@ class PostViewSet(mixins.UpdateModelMixin,
     def list(self, request):
         query = Post.objects.last()
         postLen = PostLenSerilizer(query)
-        print(postLen.data)
 
-        queryset = self.get_queryset()
+        queryset = Post.objects.all().order_by('-updated_at')
         serializer = PostSerializer(queryset, many=True)
 
         content = {

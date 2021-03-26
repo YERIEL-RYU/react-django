@@ -19,8 +19,8 @@ const ListContainer = () => {
   };
   const onList = () => {
     axios.get(url).then((response) => {
-      setPosts(response.data);
-      localStorage.setItem("postLen", response.data.length);
+      setPosts(response.data.data);
+      localStorage.setItem("postLen", response.data.postLen.id);
     });
   };
   useEffect(() => {
