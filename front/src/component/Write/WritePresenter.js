@@ -3,8 +3,10 @@ import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
 
-import ReactQill from "react-quill";
+import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import Quill from "quill";
+import ImageResize from "quill-image-resize-module";
 
 import styled from "styled-components";
 const Title = styled(Input)`
@@ -23,7 +25,7 @@ const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
 `;
-
+Quill.register("modules/ImageResize", ImageResize);
 const WritePresenter = () => {
   const history = useHistory();
   const [value, setValue] = useState("");
@@ -32,6 +34,48 @@ const WritePresenter = () => {
   const postId = localStorage.getItem("postId");
   const local = localStorage.getItem("title");
   console.log("local : ", local);
+  const modules = {
+    toolbar: {
+      container: [
+        ["bold", "italic", "underline", "strike", "blockquote"],
+        [{ size: ["small", false, "large", "huge"] }, { color: [] }],
+        [
+          { list: "ordered" },
+          { list: "bullet" },
+          { indent: "-1" },
+          { indent: "+1" },
+          { align: [] },
+        ],
+        ["clean"],
+      ],
+    },
+    clipboard: { matchVisual: false },
+    imageResize: {
+      displayStyles: {
+        backgroundColor: "black",
+        border: "none",
+        color: "white",
+      },
+      modules: ["Resize", "DisplaySize", "Toolbar"],
+    },
+  };
+
+  const formats = [
+    "header",
+    "bold",
+    "italic",
+    "underline",
+    "strike",
+    "blockquote",
+    "size",
+    "color",
+    "list",
+    "bullet",
+    "indent",
+    "link",
+    "image",
+    "align",
+  ];
 
   useEffect(() => {
     if (localStorage.getItem("title")) {
@@ -92,11 +136,15 @@ const WritePresenter = () => {
         placeholder="제목을 입력하세요."
         value={title || ""}
         onChange={onChangeTitle}
+        modules={modules}
+        formats={formats}
       />
-      <ReactQill
+      <ReactQuill
         style={{ height: "400px", margin: "30px", padding: "10px" }}
         value={value}
         onChange={onChangeValue}
+        formats={formats}
+        modules={modules}
       />
       <CheckboxContainer>
         <Checkbox checked={important} onClick={onCheckToggle} /> 중요
