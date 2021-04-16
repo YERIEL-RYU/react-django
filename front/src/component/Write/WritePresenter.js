@@ -2,13 +2,11 @@ import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
-
-import ReactQuill from "react-quill";
+import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
-import Quill from "quill";
-import ImageResize from "quill-image-resize-module";
 
 import styled from "styled-components";
+
 const Title = styled(Input)`
   margin: 0 30px;
   padding-left: 10px;
@@ -24,8 +22,8 @@ const CheckboxContainer = styled.div`
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: space-between;
+  //
 `;
-Quill.register("modules/ImageResize", ImageResize);
 const WritePresenter = () => {
   const history = useHistory();
   const [value, setValue] = useState("");
@@ -46,18 +44,11 @@ const WritePresenter = () => {
           { indent: "+1" },
           { align: [] },
         ],
+        ["link", "image"],
         ["clean"],
       ],
     },
     clipboard: { matchVisual: false },
-    imageResize: {
-      displayStyles: {
-        backgroundColor: "black",
-        border: "none",
-        color: "white",
-      },
-      modules: ["Resize", "DisplaySize", "Toolbar"],
-    },
   };
 
   const formats = [
