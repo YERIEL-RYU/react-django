@@ -1,6 +1,7 @@
 /blogBackend/backend/__pycache__/*
 /blogBackend/*/__pycache__/*
 /blogBackend/backend/blog/migrations/*
+/blogBackend/static_files/*
 
 /venv
 
