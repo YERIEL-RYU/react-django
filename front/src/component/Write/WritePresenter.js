@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
-import ReactQuill, { Quill } from "react-quill";
+import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import styled from "styled-components";
@@ -32,6 +32,34 @@ const WritePresenter = () => {
   const postId = localStorage.getItem("postId");
   const local = localStorage.getItem("title");
   console.log("local : ", local);
+
+  function imageHandler() {
+    const input = document.createElement("input");
+
+    input.setAttribute("type", "file");
+    input.setAttribute("accept", "image/*");
+    input.click();
+
+    input.onchange = async () => {
+      const file = input.files[0];
+      const formData = new FormData();
+
+      formData.append("image", file);
+
+      // Save current cursor state
+      const range = this.quill.getSelection(true);
+      console.log("range", range);
+      const res = await axios.post("http://localhost:8000/image/", formData); // API post, returns image location as string e.g. 'http://www.example.com/images/foo.png'
+      // Remove placeholder image
+      this.quill.deleteText(range.index, 1);
+
+      // Insert uploaded image
+      // this.quill.insertEmbed(range.index, 'image', res.body.image);
+      this.quill.insertEmbed(range.index, "image", res.data.image);
+      this.quill.setSelection(range.index + 1);
+    };
+  }
+
   const modules = {
     toolbar: {
       container: [
@@ -45,8 +73,10 @@ const WritePresenter = () => {
           { align: [] },
         ],
         ["link", "image"],
-        ["clean"],
       ],
+      handlers: {
+        image: imageHandler,
+      },
     },
     clipboard: { matchVisual: false },
   };
@@ -75,6 +105,7 @@ const WritePresenter = () => {
       setImportant(localStorage.getItem("imp") === "true");
     }
   }, []);
+
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   };
@@ -127,8 +158,6 @@ const WritePresenter = () => {
         placeholder="제목을 입력하세요."
         value={title || ""}
         onChange={onChangeTitle}
-        modules={modules}
-        formats={formats}
       />
       <ReactQuill
         style={{ height: "400px", margin: "30px", padding: "10px" }}

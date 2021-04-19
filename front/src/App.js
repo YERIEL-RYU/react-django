@@ -1,10 +1,11 @@
 import React from "react";
-import { BrowserRouter, Redirect, Route, Switch } from "react-router-dom";
+import { BrowserRouter, Route, Switch } from "react-router-dom";
 
 import Layout from "./component/Layout";
 import List from "./component/List";
 import Post from "./component/Post";
 import Write from "./component/Write";
+import Test from "./component/Test/Test";
 
 const App = () => {
   return (
@@ -14,6 +15,7 @@ const App = () => {
           <Route exact path="/" component={List} />
           <Route path="/post" component={Post} />
           <Route path="/write" component={Write} />
+          <Route path="/test" component={Test} />
         </Switch>
       </Layout>
     </BrowserRouter>
