@@ -4,7 +4,7 @@ from django.db import models
 
 
 class File(models.Model):
-    file_upload = models.FileField(upload_to="File", blank=False, null=False)
+    file_upload = models.FileField(upload_to="File/image", blank=False, null=False)
 
     def __str__(self):
         return self.file_upload.name

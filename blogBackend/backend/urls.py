@@ -19,5 +19,6 @@ from django.conf.urls import include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('post/', include('blog.urls'), name='post')
+    path('post/', include('blog.urls'), name='post'),
+    path('upload/', include('file.urls'), name='upload')
 ]
