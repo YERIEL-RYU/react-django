@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
@@ -31,7 +31,8 @@ const WritePresenter = () => {
   const [important, setImportant] = useState(false);
   const postId = localStorage.getItem("postId");
   const local = localStorage.getItem("title");
-  console.log("local : ", local);
+
+  var quillRef = useRef();
 
   function imageHandler() {
     const input = document.createElement("input");
@@ -39,7 +40,9 @@ const WritePresenter = () => {
     input.setAttribute("type", "file");
     input.setAttribute("accept", "image/*");
     input.click();
-
+    console.log("quillRef : ", quillRef);
+    var quill = quillRef.current.getEditor();
+    console.log("quill : ", quill);
     input.onchange = async () => {
       const file = input.files[0];
       const formData = new FormData();
@@ -47,19 +50,18 @@ const WritePresenter = () => {
       formData.append("image", file);
 
       // Save current cursor state
-      const range = this.quill.getSelection(true);
+      const range = quill.getSelection(true);
       console.log("range", range);
       const res = await axios.post("http://localhost:8000/image/", formData); // API post, returns image location as string e.g. 'http://www.example.com/images/foo.png'
       // Remove placeholder image
-      this.quill.deleteText(range.index, 1);
+      quill.deleteText(range.index, 1);
 
       // Insert uploaded image
       // this.quill.insertEmbed(range.index, 'image', res.body.image);
-      this.quill.insertEmbed(range.index, "image", res.data.image);
-      this.quill.setSelection(range.index + 1);
+      quill.insertEmbed(range.index, "image", res.data.image);
+      quill.setSelection(range.index + 1);
     };
   }
-
   const modules = {
     toolbar: {
       container: [
@@ -105,14 +107,17 @@ const WritePresenter = () => {
       setImportant(localStorage.getItem("imp") === "true");
     }
   }, []);
-
+  // useEffect(() => {
+  //   console.log("componentDidmount");
+  //   quillRef.getEditor().focus();
+  // }, [value]);
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   };
 
-  const onChangeValue = (e) => {
+  const onChangeValue = useCallback((content, delta, source, e) => {
     setValue(e);
-  };
+  }, []);
 
   const onCheckToggle = () => {
     setImportant(!important);
@@ -160,11 +165,16 @@ const WritePresenter = () => {
         onChange={onChangeTitle}
       />
       <ReactQuill
+        id="react-quill"
         style={{ height: "400px", margin: "30px", padding: "10px" }}
         value={value}
-        onChange={onChangeValue}
-        formats={formats}
+        ref={quillRef}
+        onChange={(content, delta, source, editor) =>
+          onChangeValue(content, delta, source, editor.getHTML())
+        }
         modules={modules}
+        formats={formats}
+        selection={{ start: 0, end: 0 }}
       />
       <CheckboxContainer>
         <Checkbox checked={important} onClick={onCheckToggle} /> 중요
