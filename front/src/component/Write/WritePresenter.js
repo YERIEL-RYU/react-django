@@ -1,4 +1,10 @@
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
@@ -50,7 +56,7 @@ const WritePresenter = () => {
       formData.append("image", file);
 
       // Save current cursor state
-      const range = quill.getSelection(true);
+      const range = quill.getSelection();
       console.log("range", range);
       const res = await axios.post("http://localhost:8000/image/", formData); // API post, returns image location as string e.g. 'http://www.example.com/images/foo.png'
       // Remove placeholder image
@@ -62,26 +68,29 @@ const WritePresenter = () => {
       quill.setSelection(range.index + 1);
     };
   }
-  const modules = {
-    toolbar: {
-      container: [
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ size: ["small", false, "large", "huge"] }, { color: [] }],
-        [
-          { list: "ordered" },
-          { list: "bullet" },
-          { indent: "-1" },
-          { indent: "+1" },
-          { align: [] },
+  const modules = useMemo(
+    () => ({
+      toolbar: {
+        container: [
+          ["bold", "italic", "underline", "strike", "blockquote"],
+          [{ size: ["small", false, "large", "huge"] }, { color: [] }],
+          [
+            { list: "ordered" },
+            { list: "bullet" },
+            { indent: "-1" },
+            { indent: "+1" },
+            { align: [] },
+          ],
+          ["link", "image"],
         ],
-        ["link", "image"],
-      ],
-      handlers: {
-        image: imageHandler,
+        handlers: {
+          image: imageHandler,
+        },
       },
-    },
-    clipboard: { matchVisual: false },
-  };
+      clipboard: { matchVisual: false },
+    }),
+    []
+  );
 
   const formats = [
     "header",
@@ -106,17 +115,16 @@ const WritePresenter = () => {
       setValue(localStorage.getItem("body"));
       setImportant(localStorage.getItem("imp") === "true");
     }
+    console.log("rendering");
   }, []);
-  // useEffect(() => {
-  //   console.log("componentDidmount");
-  //   quillRef.getEditor().focus();
-  // }, [value]);
+
   const onChangeTitle = (e) => {
     setTitle(e.target.value);
   };
 
   const onChangeValue = useCallback((content, delta, source, e) => {
     setValue(e);
+    console.log(delta.ops[0].re);
   }, []);
 
   const onCheckToggle = () => {
@@ -168,7 +176,9 @@ const WritePresenter = () => {
         id="react-quill"
         style={{ height: "400px", margin: "30px", padding: "10px" }}
         value={value}
-        ref={quillRef}
+        ref={(el) => {
+          quillRef.current = el;
+        }}
         onChange={(content, delta, source, editor) =>
           onChangeValue(content, delta, source, editor.getHTML())
         }
