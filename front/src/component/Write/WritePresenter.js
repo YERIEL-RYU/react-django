@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState,useMemo } from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
-import ReactQuill from "react-quill";
+import ReactQuill,{Quill} from "react-quill";
 import "react-quill/dist/quill.snow.css";
 
 import styled from "styled-components";
@@ -24,6 +24,7 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   //
 `;
+
 const WritePresenter = () => {
   const history = useHistory();
   const [value, setValue] = useState("");
@@ -31,7 +32,8 @@ const WritePresenter = () => {
   const [important, setImportant] = useState(false);
   const postId = localStorage.getItem("postId");
   const local = localStorage.getItem("title");
-  console.log("local : ", local);
+
+  var quillRef = useRef();
 
   function imageHandler() {
     const input = document.createElement("input");
@@ -40,6 +42,9 @@ const WritePresenter = () => {
     input.setAttribute("accept", "image/*");
     input.click();
 
+    var quill = quillRef.current.getEditor();
+
+
     input.onchange = async () => {
       const file = input.files[0];
       const formData = new FormData();
@@ -47,20 +52,20 @@ const WritePresenter = () => {
       formData.append("image", file);
 
       // Save current cursor state
-      const range = this.quill.getSelection(true);
+      const range = quill.getSelection();
       console.log("range", range);
       const res = await axios.post("http://localhost:8000/image/", formData); // API post, returns image location as string e.g. 'http://www.example.com/images/foo.png'
       // Remove placeholder image
-      this.quill.deleteText(range.index, 1);
+      quill.deleteText(range.index, 1);
 
       // Insert uploaded image
       // this.quill.insertEmbed(range.index, 'image', res.body.image);
-      this.quill.insertEmbed(range.index, "image", res.data.image);
-      this.quill.setSelection(range.index + 1);
+      quill.insertEmbed(range.index, "image", res.data.image);
+      quill.setSelection(range.index + 1);
     };
   }
 
-  const modules = {
+  const modules = useMemo(()=>({
     toolbar: {
       container: [
         ["bold", "italic", "underline", "strike", "blockquote"],
@@ -79,7 +84,7 @@ const WritePresenter = () => {
       },
     },
     clipboard: { matchVisual: false },
-  };
+  }),[]);
 
   const formats = [
     "header",
@@ -161,6 +166,7 @@ const WritePresenter = () => {
       />
       <ReactQuill
         style={{ height: "400px", margin: "30px", padding: "10px" }}
+        ref={(el)=>{quillRef.current=el}}
         value={value}
         onChange={onChangeValue}
         formats={formats}
