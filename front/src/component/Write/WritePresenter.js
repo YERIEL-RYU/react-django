@@ -8,9 +8,12 @@ import React, {
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
-import ReactQuill,{Quill} from "react-quill";
+import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
+import Quill from 'quill'
+import  ImageResize  from '@looop/quill-image-resize-module-react'
+
 
 import styled from "styled-components";
 
@@ -32,6 +35,7 @@ const ButtonContainer = styled.div`
   //
 `;
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
+Quill.register('modules/ImageResize', ImageResize)
 const WritePresenter = () => {
   const history = useHistory();
   const [value, setValue] = useState("");
@@ -42,37 +46,6 @@ const WritePresenter = () => {
   const local = localStorage.getItem("title");
 
   var quillRef = useRef();
-  var test = []
-  const imageHandler=useCallback(()=> {
-    const input = document.createElement("input");
-
-    input.setAttribute("type", "file");
-    input.setAttribute("accept", "image/*");
-    input.click();
-
-    var quill = quillRef.current.getEditor();
-
-    input.onchange = async () => {
-      const file = input.files[0];
-      const formData = new FormData();
-
-      formData.append("image", file);
-
-      // Save current cursor state
-      const range = quill.getSelection();
-      console.log("range", range);
-      const res = await axios.post("http://localhost:8000/image/", formData); // API post, returns image location as string e.g. 'http://www.example.com/images/foo.png'
-      test.push(res.data.image)
-      // Remove placeholder image
-      quill.deleteText(range.index, 1);
-
-      // Insert uploaded image
-      // this.quill.insertEmbed(range.index, 'image', res.body.image);
-      quill.insertEmbed(range.index, "image", res.data.image);
-      quill.setSelection(range.index + 1);
-    };
-  },[]
-)
   const modules = useMemo(()=>({
     toolbar: {
       container: [
@@ -87,11 +60,9 @@ const WritePresenter = () => {
         ],
         ["link", "image"],
       ],
-      // handlers : {
-      //   image: imageHandler
-      // }
     },
     imageDropAndPaste: true,
+    ImageResize: { modules: [ 'Resize' ]},
     clipboard: { matchVisual: false },
   }),[]);
 
@@ -118,7 +89,6 @@ const WritePresenter = () => {
       setValue(localStorage.getItem("body"));
       setImportant(localStorage.getItem("imp") === "true");
     }
-    console.log("rendering");
   }, []);
 
   const onChangeTitle = (e) => {
@@ -127,7 +97,6 @@ const WritePresenter = () => {
 
   const onChangeValue = useCallback((content, delta, source, e) => {
     setValue(e);
-    console.log(delta.ops[0].re);
   }, []);
 
   const onCheckToggle = () => {
