@@ -1,9 +1,10 @@
-import React, { useEffect, useRef, useState,useMemo } from "react";
+import React, { useEffect, useRef, useState,useMemo, useCallback } from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
 import ReactQuill,{Quill} from "react-quill";
 import "react-quill/dist/quill.snow.css";
+import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
 
 import styled from "styled-components";
 
@@ -24,18 +25,19 @@ const ButtonContainer = styled.div`
   justify-content: space-between;
   //
 `;
-
+Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 const WritePresenter = () => {
   const history = useHistory();
   const [value, setValue] = useState("");
   const [title, setTitle] = useState("");
   const [important, setImportant] = useState(false);
+
   const postId = localStorage.getItem("postId");
   const local = localStorage.getItem("title");
 
   var quillRef = useRef();
-
-  function imageHandler() {
+  var test = []
+  const imageHandler=useCallback(()=> {
     const input = document.createElement("input");
 
     input.setAttribute("type", "file");
@@ -55,6 +57,7 @@ const WritePresenter = () => {
       const range = quill.getSelection();
       console.log("range", range);
       const res = await axios.post("http://localhost:8000/image/", formData); // API post, returns image location as string e.g. 'http://www.example.com/images/foo.png'
+      test.push(res.data.image)
       // Remove placeholder image
       quill.deleteText(range.index, 1);
 
@@ -63,8 +66,8 @@ const WritePresenter = () => {
       quill.insertEmbed(range.index, "image", res.data.image);
       quill.setSelection(range.index + 1);
     };
-  }
-
+  },[]
+)
   const modules = useMemo(()=>({
     toolbar: {
       container: [
@@ -79,10 +82,11 @@ const WritePresenter = () => {
         ],
         ["link", "image"],
       ],
-      handlers: {
-        image: imageHandler,
-      },
+      // handlers : {
+      //   image: imageHandler
+      // }
     },
+    imageDropAndPaste: true,
     clipboard: { matchVisual: false },
   }),[]);
 
@@ -117,6 +121,7 @@ const WritePresenter = () => {
 
   const onChangeValue = (e) => {
     setValue(e);
+    console.log(e)
   };
 
   const onCheckToggle = () => {
