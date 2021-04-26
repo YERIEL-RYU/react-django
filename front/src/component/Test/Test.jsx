@@ -53,6 +53,17 @@ class MyComponent extends React.Component {
       this.quill.setSelection(range.index + 1);
     };
   }
+  linkHandler = (link)=>{
+    // const a = document.createElement("a");
+    if(link) {
+      var href = prompt('Enter th URL');
+      console.log(href)
+      this.quill.format('link', href);
+      
+    }else {
+      this.quill.format('link', false)
+    }
+  }
 
   render() {
     return (
@@ -89,6 +100,14 @@ class MyComponent extends React.Component {
               ],
               handlers: {
                 image: this.imageHandler,
+                link : function(value) {
+                  if (value) {
+                      var href = prompt('Enter the URL');
+                      this.quill.format('link', href);
+                  } else {
+                      this.quill.format('link', false);
+                  }
+                }
               },
             },
           }}

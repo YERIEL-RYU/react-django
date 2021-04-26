@@ -8,11 +8,11 @@ import React, {
 import { Button, Checkbox, Input } from "@material-ui/core";
 import axios from "axios";
 import { useHistory } from "react-router";
+import Quill from 'quill'
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
-import Quill from 'quill'
-import  ImageResize  from '@looop/quill-image-resize-module-react'
+import ImageResize from '@looop/quill-image-resize-module-react'
 
 
 import styled from "styled-components";
@@ -46,20 +46,40 @@ const WritePresenter = () => {
   const local = localStorage.getItem("title");
 
   var quillRef = useRef();
+  const linkHandler = ()=>{
+    const quill = quillRef.current.getEditor();
+    var href = prompt('Enter the URL');
+    if(href !== null) {
+      
+      if (!href.includes('http') && !href.includes('https://')){
+        href = `https://${href}`
+      }
+      const range = quill.getSelection();
+      console.log(range)
+      if(range.length === 0){
+        quill.insertText(range.index, href, {link:href})
+      }
+      else{
+        quill.format('link', href)
+      }   
+    }
+  }
   const modules = useMemo(()=>({
     toolbar: {
       container: [
         ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ size: ["small", false, "large", "huge"] }, { color: [] }],
+        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
+        [{ 'color': [] }, { 'background': [] }], 
         [
           { list: "ordered" },
           { list: "bullet" },
-          { indent: "-1" },
-          { indent: "+1" },
-          { align: [] },
         ],
         ["link", "image"],
+        ['clean']  
       ],
+      handlers : {
+        link:linkHandler
+      }
     },
     imageDropAndPaste: true,
     ImageResize: { modules: [ 'Resize' ]},
@@ -83,6 +103,7 @@ const WritePresenter = () => {
     "align",
   ];
 
+
   useEffect(() => {
     if (localStorage.getItem("title")) {
       setTitle(localStorage.getItem("title"));
@@ -97,6 +118,7 @@ const WritePresenter = () => {
 
   const onChangeValue = useCallback((content, delta, source, e) => {
     setValue(e);
+    console.log(delta)
   }, []);
 
   const onCheckToggle = () => {
@@ -149,9 +171,7 @@ const WritePresenter = () => {
         style={{ height: "400px", margin: "30px", padding: "10px" }}
         ref={(el)=>{quillRef.current=el}}
         value={value}
-        ref={(el) => {
-          quillRef.current = el;
-        }}
+        ref={(el) => {quillRef.current = el}}
         onChange={(content, delta, source, editor) =>
           onChangeValue(content, delta, source, editor.getHTML())
         }
