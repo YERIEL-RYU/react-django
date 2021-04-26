@@ -78,7 +78,32 @@ const WritePresenter = () => {
         ['clean']  
       ],
       handlers : {
-        link:linkHandler
+        // link:function(value) {
+        //   const that = this;
+  
+        //   const tooltip = that.quill.theme.tooltip;
+        //   const input = tooltip.root.querySelector("input[data-link]");
+        //   input.dataset.link = "https://r-0o0-j.tistory.com";
+        //   input.placeholder = "r-0o0-j.tistory.com";
+        //   input.dataset.lpignore = true;
+
+        //   console.log('tip : ', tooltip)
+          
+        //   // https://github.com/quilljs/quill/blob/develop/themes/snow.js#L113
+        //   if (value) {
+        //     const range = that.quill.getSelection();
+        //     let preview = that.quill.getText(range);
+        //     if (range == null || range.length === 0) { 
+        //      return;
+        //     }
+            
+        //     const { tooltip } = that.quill.theme;
+        //     tooltip.edit("link", preview)
+        //   } else {
+        //     that.quill.format("link", false);
+        //   }
+        // },
+        link : linkHandler
       }
     },
     imageDropAndPaste: true,
