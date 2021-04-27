@@ -2,6 +2,8 @@ import React from "react";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
 
+import Slideshow from "../Slideshow/Slideshow"
+
 import styled from "styled-components";
 
 const Title = styled.div`
@@ -43,6 +45,7 @@ const PostPresenter = (props) => {
   const { onList, onNext, onPrev, post, onDelete, onModify } = props;
   return (
     <>
+      <Slideshow />
       {post !== undefined && (
         <>
           <Title>{post.title}</Title>
