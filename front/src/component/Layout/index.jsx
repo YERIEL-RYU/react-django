@@ -3,6 +3,8 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import { Link } from 'react-router-dom';
+import Slideshow from "../Slideshow/Slideshow"
+
 
 import styled from 'styled-components';
 
@@ -27,6 +29,7 @@ const index = (props) => {
           <Post to="/">POST</Post>
         </Header>
         <Divider />
+        <Slideshow />
         <Title className="title">
           <h3>공지사항</h3>
         </Title>
