@@ -52,22 +52,26 @@ class PostViewSet(mixins.UpdateModelMixin,
         num = [ind for ind, val in enumerate(body_list) if 'data:' in val]
 
         file_names = []
+        title_num = 1
         for data in img:
             format, imgstr = data.split(';base64')
             name, extension   = secrets.token_hex(20), format.split('/')[-1]
-            data = ContentFile(base64.b64decode(imgstr), name=f"{name}.{extension}")
+            data = ContentFile(base64.b64decode(imgstr), name=f"{title}_{title_num}.{extension}")
             image = Image.objects.create(image=data)
             image = 'http://localhost:8000/media/'+image.__str__()
             file_names.append(image)
+            title_num +=1
+            print(title_num)
         print(file_names)
 
 
+        t = 0
         for n in num :
-            t = 0
             body_list[n] = file_names[t]
             t += 1
         
         body = ('"').join(body_list)
+        print(body)
         Post.objects.create(title=title, body=body, important=important, writer=writer)
         
         return Response({"create":'good'}, status=201)
