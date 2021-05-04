@@ -23,7 +23,9 @@ const Info = styled.div`
 const Writer = styled.div``;
 const Date = styled.div``;
 const Content = styled.div`
-  height: 350px;
+  height: 100%;
+  column-count : 2;
+  column-gap: 20px;
 `;
 const ButtonContainer = styled.div`
   display: flex;
