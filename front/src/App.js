@@ -7,6 +7,8 @@ import Post from "./component/Post";
 import Write from "./component/Write";
 import Test from "./component/Test/Test";
 import Quill from "./component/Test/Quill_drop_paste";
+import Login from './component/Auth/LoginPage'
+import Register from './component/Auth/RegisterPage'
 
 const App = () => {
   return (
@@ -18,6 +20,8 @@ const App = () => {
           <Route path="/write" component={Write} />
           <Route path="/test" component={Test} />
           <Route path="/quill" component={Quill} />
+          <Route path="/login" component={Login} />
+          <Route path="/register" component={Register} />
         </Switch>
       </Layout>
     </BrowserRouter>
