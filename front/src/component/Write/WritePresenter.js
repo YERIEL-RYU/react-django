@@ -1,13 +1,5 @@
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import React  from "react";
 import { Button, Checkbox, Input } from "@material-ui/core";
-import axios from "axios";
-import { useHistory } from "react-router";
 import Quill from 'quill'
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -36,153 +28,21 @@ const ButtonContainer = styled.div`
 `;
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 Quill.register('modules/ImageResize', ImageResize)
-const WritePresenter = () => {
-  const history = useHistory();
-  const [value, setValue] = useState("");
-  const [title, setTitle] = useState("");
-  const [important, setImportant] = useState(false);
-
-  const postId = localStorage.getItem("postId");
-  const local = localStorage.getItem("title");
-
-  var quillRef = useRef();
-  const linkHandler = ()=>{
-    const quill = quillRef.current.getEditor();
-    var href = prompt('Enter the URL');
-    if(href !== null) {
-      
-      if (!href.includes('http') && !href.includes('https://')){
-        href = `https://${href}`
-      }
-      const range = quill.getSelection();
-      console.log(range)
-      if(range.length === 0){
-        quill.insertText(range.index, href, {link:href})
-      }
-      else{
-        quill.format('link', href)
-      }   
-    }
-  }
-  const modules = useMemo(()=>({
-    toolbar: {
-      container: [
-        ["bold", "italic", "underline", "strike", "blockquote"],
-        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-        [{ 'color': [] }, { 'background': [] }], 
-        [
-          { list: "ordered" },
-          { list: "bullet" },
-        ],
-        ["link", "image"],
-        ['clean']  
-      ],
-      handlers : {
-        // link:function(value) {
-        //   const that = this;
-  
-        //   const tooltip = that.quill.theme.tooltip;
-        //   const input = tooltip.root.querySelector("input[data-link]");
-        //   input.dataset.link = "https://r-0o0-j.tistory.com";
-        //   input.placeholder = "r-0o0-j.tistory.com";
-        //   input.dataset.lpignore = true;
-
-        //   console.log('tip : ', tooltip)
-          
-        //   // https://github.com/quilljs/quill/blob/develop/themes/snow.js#L113
-        //   if (value) {
-        //     const range = that.quill.getSelection();
-        //     let preview = that.quill.getText(range);
-        //     if (range == null || range.length === 0) { 
-        //      return;
-        //     }
-            
-        //     const { tooltip } = that.quill.theme;
-        //     tooltip.edit("link", preview)
-        //   } else {
-        //     that.quill.format("link", false);
-        //   }
-        // },
-        link : linkHandler
-      }
-    },
-    imageDropAndPaste: true,
-    ImageResize: { modules: [ 'Resize' ]},
-    clipboard: { matchVisual: false },
-  }),[]);
-
-  const formats = [
-    "header",
-    "bold",
-    "italic",
-    "underline",
-    "strike",
-    "blockquote",
-    "size",
-    "color",
-    "list",
-    "bullet",
-    "indent",
-    "link",
-    "image",
-    "align",
-  ];
-
-
-  useEffect(() => {
-    if (localStorage.getItem("title")) {
-      setTitle(localStorage.getItem("title"));
-      setValue(localStorage.getItem("body"));
-      setImportant(localStorage.getItem("imp") === "true");
-    }
-  }, []);
-
-  const onChangeTitle = (e) => {
-    setTitle(e.target.value);
-  };
-
-  const onChangeValue = useCallback((content, delta, source, e) => {
-    setValue(e);
-    console.log(delta)
-  }, []);
-
-  const onCheckToggle = () => {
-    setImportant(!important);
-  };
-  const onPost = () => {
-    console.log("post");
-    axios
-      .post("http://localhost:8000/post/", {
-        title: title,
-        body: value,
-        writer: "yeriel",
-        important: important,
-      })
-      .then((res) => console.log(res))
-      .then(history.push("/"));
-  };
-  const onModify = () => {
-    console.log("modify");
-    axios
-      .put(`http://localhost:8000/post/${postId}/`, {
-        title: title,
-        body: value,
-        writer: "yeriel",
-        important: important,
-      })
-      .then((res) => console.log(res))
-      .then(history.push("/"));
-    delete localStorage.title;
-    delete localStorage.body;
-    delete localStorage.imp;
-  };
-  const onCancel = () => {
-    console.log("cancel");
-    delete localStorage.title;
-    delete localStorage.body;
-    delete localStorage.imp;
-    history.push("/");
-  };
+const WritePresenter = (props) => {
+  const {value,
+  title,
+  important,
+  local,
+  quillRef,
+  modules,
+  formats,
+  onChangeTitle,
+  onChangeValue,
+  onCheckToggle,
+  onPost,
+  onModify,
+  onCancel,}= props;
+ 
   return (
     <div>
       <Title
@@ -190,16 +50,15 @@ const WritePresenter = () => {
         placeholder="제목을 입력하세요."
         value={title || ""}
         onChange={onChangeTitle}
+        margin="dense"
       />
+      {console.log(quillRef)}
       <ReactQuill
         id="react-quill"
         style={{ height: "400px", margin: "30px", padding: "10px" }}
-        ref={(el)=>{quillRef.current=el}}
+        // ref={(el) => {quillRef.current = el}}
         value={value}
-        ref={(el) => {quillRef.current = el}}
-        onChange={(content, delta, source, editor) =>
-          onChangeValue(content, delta, source, editor.getHTML())
-        }
+        onChange={onChangeValue}
         modules={modules}
         formats={formats}
         selection={{ start: 0, end: 0 }}
