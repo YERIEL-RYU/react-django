@@ -9,6 +9,7 @@ import Test from "./component/Test/Test";
 import Quill from "./component/Test/Quill_drop_paste";
 import Login from './component/Auth/LoginPage'
 import Register from './component/Auth/RegisterPage'
+import SortTable from './component/SortTable'
 
 const App = () => {
   return (
@@ -22,6 +23,7 @@ const App = () => {
           <Route path="/quill" component={Quill} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/sorttable" component={SortTable} />
         </Switch>
       </Layout>
     </BrowserRouter>
