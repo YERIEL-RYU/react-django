@@ -12,6 +12,7 @@ import Quill from 'quill'
 import "react-quill/dist/quill.snow.css";
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
 import ImageResize from '@looop/quill-image-resize-module-react'
+import {debounce} from 'loadsh'
 
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 Quill.register('modules/ImageResize', ImageResize)
@@ -90,10 +91,10 @@ const WriteContainer = () => {
         setImportant(localStorage.getItem("imp") === "true");
       }
     }, []);
-  
-    const onChangeTitle = (e) => {
-      setTitle(e.target.value);
-    };
+    
+    const onChangeTitle = (e)=>{
+      setTitle(e.target.value)
+    }
   
     const onChangeValue = useCallback((e) => {
       setValue(e);

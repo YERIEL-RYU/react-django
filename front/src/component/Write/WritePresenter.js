@@ -49,7 +49,7 @@ const WritePresenter = (props) => {
         fullWidth
         placeholder="제목을 입력하세요."
         value={title || ""}
-        onChange={onChangeTitle}
+        onChange={(e)=>onChangeTitle(e)}
         margin="dense"
       />
       {console.log(quillRef)}

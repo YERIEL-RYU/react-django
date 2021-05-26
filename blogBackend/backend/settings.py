@@ -41,6 +41,7 @@ INSTALLED_APPS = [
 
     'blog',
     'image',
+    'dicom',
 
     'rest_framework',
     'corsheaders'

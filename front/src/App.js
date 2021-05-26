@@ -7,9 +7,10 @@ import Post from "./component/Post";
 import Write from "./component/Write";
 import Test from "./component/Test/Test";
 import Quill from "./component/Test/Quill_drop_paste";
-import Login from './component/Auth/LoginPage'
-import Register from './component/Auth/RegisterPage'
-import SortTable from './component/SortTable'
+import Login from "./component/Auth/LoginPage";
+import Register from "./component/Auth/RegisterPage";
+import SortTable from "./component/SortTable";
+import View from "./component/View";
 
 const App = () => {
   return (
@@ -24,6 +25,7 @@ const App = () => {
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/sorttable" component={SortTable} />
+          <Route path="/viewer" component={View} />
         </Switch>
       </Layout>
     </BrowserRouter>
