@@ -12,7 +12,7 @@ const ViewContainer = () => {
         dicom.append('dicom', file)
         axios.post('http://localhost:8000/dicom/',dicom)
         .then(res=>{
-            var path = 'http://localhost:8000'
+            var path = 'dicomweb:http://localhost:8000'
             path += res.data.dicom
             setImg([path])
             setimgID(res.data.id)

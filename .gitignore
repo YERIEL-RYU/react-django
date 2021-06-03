@@ -1,6 +1,11 @@
 /blogBackend/backend/__pycache__/*
 /blogBackend/*/__pycache__/*
-/blogBackend/backend/blog/migrations/*
+/blogBackend/blog/migrations/*
+/blogBackend/dicom/migrations/*
+/blogBackend/image/migrations/*
+/blogBackend/blog/migrations/__pycache__/*
+/blogBackend/backend/dicom/migrations/__pycache__/*
+/blogBackend/backend/image/migrations/__pycache__/*
 /blogBackend/static_files/*
 
 /venv
