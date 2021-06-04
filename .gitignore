@@ -13,3 +13,5 @@
 /front/yarn.lock
 /front/node_modules/*
 /front/.prettierrc
+
+yarn.lock

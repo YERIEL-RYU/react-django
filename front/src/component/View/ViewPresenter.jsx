@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useCallback } from 'react';
 import cornerstone from 'cornerstone-core';
 import cornerstoneTools from 'cornerstone-tools';
 import CornerstoneViewport from 'react-cornerstone-viewport'
@@ -7,43 +7,36 @@ import cornerstoneBase64ImageLoader from 'cornerstone-base64-image-loader';
 import cornerstoneMath from 'cornerstone-math';
 import dicomParser from 'dicom-parser';
 import Hammer from 'hammerjs';
-class CustomLoader extends React.Component {
-  render() {
-    return (
-      <div
-        className="lds-ripple"
-        style={{
-          position: 'absolute',
-          width: '100%',
-          height: '100%',
-          color: 'white',
-        }}
-      >
-        <div>이미지를 업로드하세요</div>
-      </div>
-    );
-  }
-}
+import styled from 'styled-components'
 
-const CutomOverlay = (props) => {
-  return (
-    <div style={{position: 'absolute',
-    top: '15px',
-    left: '15px',
-    width: '100%',
-    height: '100%',
-    color: 'white',}}>
-            <p>
-              <b>BOB</b>: <span style={{ color: 'dodgerblue' }}>{props.patientId}</span>
-            </p>
-    </div>
-  )
-}
+const InfoContainer = styled.div`
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 90%;
+  height: 90%;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
+const InfoRowsUp = styled.div `
+  display: flex;
+  justify-content: space-between;
+`;
+
+const InfoRowsDown = styled.div` 
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+`;
+
 const ViewPresenter = (props) => {
-    const {onChange, img} = props;
-    const [test, setTest] = useState('')
-    const [state, setState]= useState('')
-    const element = document.getElementById('test-view');
+    const {onChange,img, imgID} = props;
+    const [state, setState] = useState({});
+    const [element, setElement] = useState()
+
     cornerstoneTools.external.cornerstone = cornerstone;
     cornerstoneTools.external.Hammer = Hammer;
     cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
@@ -51,119 +44,142 @@ const ViewPresenter = (props) => {
 
     cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
     cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
-    cornerstoneBase64ImageLoader.external.cornerstone = cornerstone;
 
-    // if(img !== undefined){
-    //   cornerstone.loadAndCacheImage(img).then(function(image) {
-    //     cornerstone.displayImage(element, image);
-      
-    //   });
-    // }
-    const onImageRendered = (e) => {
-      const eventData = e.detail;
-      console.log(e)
-      cornerstone.setToPixelCoordinateSystem(eventData.enabledElement, eventData.canvasContext);
-      const context = eventData.canvasContext;
-        context.beginPath();
-        context.strokeStyle = 'white';
-        context.lineWidth = .5;
-        context.rect(128, 90, 50, 60);
-        context.stroke();
-        context.fillStyle = "white";
-        context.font = "6px Arial";
-        context.fillText("Tumor Here", 128, 85);
-    }
-    
     const tools= [
-        // Mouse
-        {
-          name: 'Wwwc',
-          mode: 'active',
-          modeOptions: { mouseButtonMask: 1 },
-        },
-        {
-          name: 'Zoom',
-          mode: 'active',
-          modeOptions: { mouseButtonMask: 2 },
-        },
-        {
-          name: 'Pan',
-          mode: 'active',
-          modeOptions: { mouseButtonMask: 4 },
-        },
-        // Scroll
-        { name: 'StackScrollMouseWheel', mode: 'active' },
-        // Touch
-        { name: 'PanMultiTouch', mode: 'active' },
-        { name: 'ZoomTouchPinch', mode: 'active' },
-        { name: 'StackScrollMultiTouch', mode: 'active' },
-    ];
-    
-    // useEffect(()=>{
-    //   if(img.length !== 0){
-    //     cornerstone
-    //             .loadImage(img[0])
-    //             .then(image=>{
-    //               const {byteArray} = image.data;
-    //               const dataSet = dicomParser.parseDicom(byteArray);
-    //               console.log(dataSet.string('x00100030'))
-    //               setTest(dataSet.string('x00100030'))
+      // Mouse
+      {
+        name: 'Wwwc',
+        mode: 'active',
+        modeOptions: { mouseButtonMask: 1 },
+      },
+      {
+        name: 'Zoom',
+        mode: 'active',
+        modeOptions: { mouseButtonMask: 2 },
+      },
+      {
+        name: 'Pan',
+        mode: 'active',
+        modeOptions: { mouseButtonMask: 4 },
+      },
+      // Scroll
+      { name: 'StackScrollMouseWheel', mode: 'active' },
+      // Touch
+      { name: 'PanMultiTouch', mode: 'active' },
+      { name: 'ZoomTouchPinch', mode: 'active' },
+      { name: 'StackScrollMultiTouch', mode: 'active' },
+    ]
 
-    //             })
-    //   }
-    // },[img])
-    
-    const onElementEnabled=(Evt=>{
-      const cornerstoneElement = Evt.detail.element;
-      setState(cornerstoneElement)
-      cornerstoneElement.addEventListener('cornerstoneimagerendered',
-      imageRenderedEvent => {
-        const viewport = imageRenderedEvent.detail.viewport;
-        // cornerstone.setToPixelCoordinateSystem(imageRenderedEvent.detail.enabledElement, imageRenderedEvent.detail.canvasContext);
-        // const context = imageRenderedEvent.detail.canvasContext;
-        // context.beginPath();
-        // context.strokeStyle = 'white';
-        // context.lineWidth = .5;
-        // context.rect(128, 90, 50, 60);
-        // context.stroke();
-        // context.fillStyle = "white";
-        // context.font = "6px Arial";
-        // context.fillText("Tumor Here", 128, 85);
-        cornerstone.setViewport(cornerstoneElement, viewport);
-      })
-    })
+    const Loader = () => {
+      return (
+        <div
+        className="lds-ripple"
+        style={{
+          position: 'absolute',
+          width: '100%',
+          height: '100%',
+          color: 'white',
+          top:'50%',
+          left:'50%'
+        }}
+      >
+        <div>이미지를 업로드하세요</div>
+      </div>
+      )
+    };
+
+    const Overlay = () => {
+      return (
+        <InfoContainer>
+          <InfoRowsUp>
+          {/* FIXME Disunit Component */}
+          {/* TODO Minimize rerender metadata */}
+            <div>
+              <div>DOB : {state.patientBirth}</div>
+              <div>Sex : {state.patientSex}</div>
+            </div>
+             <div>
+              <div>Modality: {state.imgModality}</div>
+              <div>SeriesNumber : {state.seriesNumber}</div>
+            </div>
+          </InfoRowsUp>
+
+          <InfoRowsDown>
+            <div>
+              <div>StudyDate : {state.imgStudyDate}</div>
+              <div>Protocol: {state.protocol}</div>
+            </div>
+            <div>
+              <div>WW: {state.width}</div>
+              <div>WC: {state.center}</div>
+            </div>
+          </InfoRowsDown>
+        </InfoContainer>
+      )
+    };
+
+    const onElementEnabled = useCallback((enabledEvt) =>{
+      const cornerstoneElement = enabledEvt.detail.element;
+      // console.log(cornerstoneElement)
+      setElement(cornerstoneElement)
+
+      // Wait for image to render, then invert it
+      
+    },[]);
+
+    useEffect(()=>{
+      if(element !== undefined){
+        element.addEventListener(
+          'cornerstoneimagerendered',
+          imageRenderedEvent => {
+            const viewport = imageRenderedEvent.detail.viewport;
+            const image = imageRenderedEvent.detail.image
+            const {byteArray} = image.data;
+            const dataSet = dicomParser.parseDicom(byteArray);
+
+            const patientBirth = dataSet.string('x00100030');
+            const patientSex = dataSet.string('x00100040');
+            const imgStudyDate = dataSet.string('x00080020');
+            const seriesNumber = dataSet.string('x00200011');
+            const stationName = dataSet.string('x00081010');
+            const protocol = dataSet.string('x00181030');
+            const imgModality = dataSet.string('x00080060');
+            const center = dataSet.string('x00281050');
+            const width = dataSet.string('x00281051');
+
+
+            setState({
+                // ...state,
+                patientBirth,
+                patientSex,
+                imgStudyDate,
+                seriesNumber,
+                stationName,
+                protocol,
+                imgModality,
+                width,
+                center,
+            });
+            cornerstone.setViewport(element, viewport);
+          }
+        )
+        return;
+      }
+    },[element])
+
+
     return (
         <div>
             <h1>Dicom Viewer</h1>
-            {console.log(img)}
-            
+            {/* {console.log(img)} */}
             <input type="file" accept=".dcm" onChange={onChange}/>
             <CornerstoneViewport 
               tools={tools}
               imageIds={img}
-              // viewportOverlayComponent={CutomOverlay}
-              onElementEnabled={elementEnabledEvt => {
-                const cornerstoneElement = elementEnabledEvt.detail.element;
-
-                console.log(elementEnabledEvt)
-            
-                // Save this for later
-                // setState(cornerstoneElement);
-            
-                // Wait for image to render, then invert it
-                // cornerstoneElement.addEventListener(
-                //   'cornerstoneimagerendered',
-                //   imageRenderedEvent => {
-                //     const viewport = imageRenderedEvent.detail.viewport;
-            
-                //     cornerstone.setViewport(cornerstoneElement, viewport);
-                //   }
-                // );
-              }}
+              onElementEnabled={elementEnabledEvt => onElementEnabled(elementEnabledEvt)}
+              loadingIndicatorComponent={Loader}
+              viewportOverlayComponent={Overlay}
               style={{ minWidth: '100%', height: '512px', flex: '1' }}
-              id='test-view'
-              loadingIndicatorComponent={CustomLoader}
-
             />
         </div>
     );
