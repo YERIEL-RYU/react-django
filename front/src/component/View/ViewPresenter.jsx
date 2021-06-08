@@ -1,7 +1,6 @@
 import React, { useEffect, useState, useCallback } from 'react';
 import cornerstone from 'cornerstone-core';
 import cornerstoneTools from 'cornerstone-tools';
-import CornerstoneViewport from 'react-cornerstone-viewport'
 import cornerstoneWADOImageLoader from 'cornerstone-wado-image-loader';
 import cornerstoneFileImageLoader from 'cornerstone-file-image-loader';
 import cornerstoneWebImageLoader from 'cornerstone-web-image-loader';
@@ -12,7 +11,8 @@ import styled from 'styled-components'
 
 const CanvasWrapper = styled.div `
   && {
-    width: 100%
+    width: 100%;
+    
     height: 100%;
     background: black;
     color: white;
@@ -49,54 +49,72 @@ const Container = styled.div `
 `;
 
 const ViewPresenter = (props) => {
-    const {onChange,img,uploaded, viewer2} = props;
-    const [state, setState] = useState({});
-    const [element, setElement] = useState();
+  const {onChange,img,uploaded, viewer2} = props;
+  const [state, setState] = useState({});
 
 
-// NOTE conerstoneTools
-cornerstoneTools.external.cornerstone = cornerstone;
-cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
-cornerstoneTools.external.Hammer = Hammer;
+  // NOTE conerstoneTools
+  cornerstoneTools.external.cornerstone = cornerstone;
+  cornerstoneTools.external.cornerstoneMath = cornerstoneMath;
+  cornerstoneTools.external.Hammer = Hammer;
 
-// NOTE cornerstoneWADOImageLoader
-cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
-cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
-cornerstoneFileImageLoader.external.cornerstone = cornerstone;
-cornerstoneWebImageLoader.external.cornerstone = cornerstone;
+  // NOTE cornerstoneWADOImageLoader
+  cornerstoneWADOImageLoader.external.dicomParser = dicomParser;
+  cornerstoneWADOImageLoader.external.cornerstone = cornerstone;
+  cornerstoneFileImageLoader.external.cornerstone = cornerstone;
+  cornerstoneWebImageLoader.external.cornerstone = cornerstone;
 
 
-cornerstoneTools.init({
-  mouseEnabled: true,
-  touchEnabled: true,
-  globalToolSyncEnabled: true,
-  showSVGCursors: false,
-});
+  cornerstoneTools.init({
+    mouseEnabled: true,
+    touchEnabled: true,
+    globalToolSyncEnabled: true,
+    showSVGCursors: false,
+  });
 
     const {
       WwwcTool = cornerstone.WwwcTool,
       ZoomTool = cornerstone.ZoomTool,
-  } = cornerstoneTools;
+    } = cornerstoneTools;
 
+    /**
+     * cornerston tool setting
+     */
+    useEffect(()=>{
+      const elements = [document.getElementById('viewer'), document.getElementById('deeplearning-viewer')];
+      console.log(elements)
+      
+      /**
+       * sychronize test
+       */
+      // const synchronizer = new cornerstoneTools.Synchronizer(
+      //   'cornerstoneimagerendered',
+      //   cornerstoneTools.wwwcSynchronizer
+      // );
+      // elements.forEach(el=> {
+      //   synchronizer.add(el);
+      // });
+      // console.log(elements)
+      // synchronizer.enabled = true;
 
+      cornerstoneTools.addTool(WwwcTool)
+      cornerstoneTools.addTool(ZoomTool)
+      cornerstoneTools.setToolActive('Wwwc', {mouseButtonMask: 1});
+      cornerstoneTools.setToolActive('Zoom', {mouseButtonMask: 2});
+    },[WwwcTool,ZoomTool])
+
+    /**
+     * local viewer setting
+     */
     useEffect(()=>{
       const element = document.getElementById('viewer');
       cornerstone.enable(element);
 
-      let stack = {
-        currentImageIdIndex: 0,
-        imageIds: [],
-        options: {
-          opacity: 1,
-          visible: true,
-          name: 'DICOM',
-        },
-      };
-      if (img.length !== 0){
+      if (img !== undefined){
 
-      cornerstone
-      .loadImage(img[0])
-      .then(image => {
+        cornerstone
+        .loadImage(img)
+        .then(image => {
           const {byteArray} = image.data;
           console.log(image)
 
@@ -129,29 +147,25 @@ cornerstoneTools.init({
           });
 
           cornerstone.displayImage(element, image, viewport);
-      });
-    }
-
-      cornerstoneTools.addStackStateManager(element, ['stack']);
-      cornerstoneTools.addToolState(element, 'stack', stack);
-
-      cornerstoneTools.addTool(WwwcTool)
-      cornerstoneTools.addTool(ZoomTool)
-      cornerstoneTools.setToolActive('Wwwc', {mouseButtonMask: 1});
-      cornerstoneTools.setToolActive('Zoom', {mouseButtonMask: 2});
-
+        });
+      }
     },[img])
     
+    /**
+     * server viewer setting
+     */
     useEffect(()=>{
       const element = document.getElementById('deeplearning-viewer');
       cornerstone.enable(element);
-      if(viewer2 !== undefined){console.log('test1 : ', viewer2 )
+      if(viewer2 !== undefined){
+        console.log('test1 : ', viewer2 )
         cornerstone
         .loadImage(viewer2)
         .then(image => {
             cornerstone.displayImage(element, image);
-        });}
-    },[viewer2, uploaded])
+        });
+      }
+    },[viewer2])
 
 
     return (
@@ -159,7 +173,7 @@ cornerstoneTools.init({
         <h1>Dicom Viewer</h1>
         <input type="file" accept=".dcm" onChange={onChange}/>
         <br />
-        <div style={{width:'100%'}}>
+        <div style={{width:'100%', display:'flex', flexDirection:'row'}}>
         <CanvasWrapper id="viewer">
           <InfoRowsUp>
             <div>

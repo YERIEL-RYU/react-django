@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const ViewContainer = () => {
     const BASE_URL = 'localhost:8000/'
-    const [img, setImg] = useState([])
+    const [img, setImg] = useState()
     const [viewer2, setViewer2] = useState()
     const [uploaded, setUploaded] = useState(false)
     const onChange=(e)=>{
@@ -24,7 +24,7 @@ const ViewContainer = () => {
         console.log(fileUrl)
         fileUrl = 'wadouri:' + fileUrl
         console.log(fileUrl)
-        setImg([fileUrl])
+        setImg(fileUrl)
     }
 
     return (
