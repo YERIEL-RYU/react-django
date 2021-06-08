@@ -4,29 +4,31 @@ import axios from 'axios';
 
 const ViewContainer = () => {
     const BASE_URL = 'localhost:8000/'
-    const [img, setImg] = useState(["dicomweb://s3.amazonaws.com/lury/PTCTStudy/1.3.6.1.4.1.25403.52237031786.3872.20100510032220.11.dcm"])
-    const [imgID , setimgID] = useState()
+    const [img, setImg] = useState([])
+    const [viewer2, setViewer2] = useState()
+    const [uploaded, setUploaded] = useState(false)
     const onChange=(e)=>{
         const file = e.target.files[0]
         console.log(file)
         const dicom = new FormData();
         dicom.append('dicom', file)
-        // axios.post('http://localhost:8000/dicom/',dicom)
-        // .then(res=>{
-        //     var path = 'dicomweb://localhost:8000'
-        //     path += res.data.dicom
-        //     setImg([path])
-        //     setimgID(res.data.id)
-        // })
-        var test = URL.createObjectURL(file)
-        console.log(test)
-        test = 'dicomweb:' + test
-        console.log(test)
-        setImg([test])
+        axios.post('http://localhost:8000/dicom/',dicom)
+        .then(res=>{
+            var path = 'http://localhost:8000'
+            path += res.data.path
+            console.log(path)
+            setUploaded(true)
+            setViewer2(path)
+        })
+        var fileUrl = URL.createObjectURL(file)
+        console.log(fileUrl)
+        fileUrl = 'wadouri:' + fileUrl
+        console.log(fileUrl)
+        setImg([fileUrl])
     }
 
     return (
-        <ViewPresenter onChange={onChange} img={img} imgID={imgID}/>
+        <ViewPresenter onChange={onChange} img={img} uploaded={uploaded} viewer2={viewer2}/>
     );
 };
 
