@@ -82,8 +82,6 @@ const ViewPresenter = (props) => {
      */
     useEffect(()=>{
       const elements = [document.getElementById('viewer'), document.getElementById('deeplearning-viewer')];
-      console.log(elements)
-      
       /**
        * sychronize test
        */
@@ -158,14 +156,60 @@ const ViewPresenter = (props) => {
       const element = document.getElementById('deeplearning-viewer');
       cornerstone.enable(element);
       if(viewer2 !== undefined){
-        console.log('test1 : ', viewer2 )
-        cornerstone
-        .loadImage(viewer2)
-        .then(image => {
-            cornerstone.displayImage(element, image);
-        });
+
+        const layers = [
+          {
+            imageId : img,
+            option : {
+              name : 'Dicom'
+            }
+          },
+          {
+            imageId :viewer2,
+            option : {
+              name : 'PNG',
+              opacity: 0.2,
+              viewport: {
+                colormap: 'hotIron',
+                voi: {
+                    windowWidth: 30,
+                    windowCenter: 16
+                }
+            }
+            }
+          },
+        ]
+      console.log(layers);
+        function loadImages() {
+          const promises = [];
+  
+          layers.forEach(function(layer) {
+              console.log(layer)
+              const loadPromise = cornerstone.loadAndCacheImage(layer.imageId);
+              promises.push(loadPromise);
+          });
+  
+          return Promise.all(promises);
+        };
+
+        loadImages().then(function(images) {
+            images.forEach(function(image, index) {
+                const layer = layers[index];
+                const layerId = cornerstone.addLayer(element, image, layer.options);
+
+                cornerstone.updateImage(element);
+                console.log('Layer ' + index + ': ' + layerId);
+            });
+        })
+
+        // cornerstone
+        // .loadImage(viewer2)
+        // .then(image => {
+        //     console.log(image)
+        //     cornerstone.displayImage(element, image);
+        // });
       }
-    },[viewer2])
+    },[viewer2,img])
 
 
     return (
