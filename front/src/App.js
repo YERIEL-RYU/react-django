@@ -11,6 +11,7 @@ import Login from "./component/Auth/LoginPage";
 import Register from "./component/Auth/RegisterPage";
 import SortTable from "./component/SortTable";
 import View from "./component/View";
+import Carousel from "./component/Carousel/Carousel";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/register" component={Register} />
           <Route path="/sorttable" component={SortTable} />
           <Route path="/viewer" component={View} />
+          <Route path="/carousel" component={Carousel} />
         </Switch>
       </Layout>
     </BrowserRouter>
