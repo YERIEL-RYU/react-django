@@ -42,9 +42,11 @@ INSTALLED_APPS = [
     'blog',
     'image',
     'dicom',
+    'cars',
 
     'rest_framework',
-    'corsheaders'
+    'corsheaders',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +140,13 @@ CORS_ALLOW_CREDENTIALS = True
 
 MEDIA_URL ='/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR,'static_files')
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+        'rest_framework.renderers.BrowsableAPIRenderer',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',  # 필터링
+    ),
+}

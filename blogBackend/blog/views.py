@@ -18,13 +18,15 @@ class PostViewSet(mixins.UpdateModelMixin,
                 #   mixins.CreateModelMixin,
                   mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
-    filter_backends = [filters.OrderingFilter]
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['updated_at']
+    search_fields = ['title','body']
     queryset = Post.objects.all()
     serializer_class = PostSerializer
     pagination_class = None
 
     def list(self, request):
+        print(request)
         query = Post.objects.last()
         postLen = PostLenSerilizer(query)
 

@@ -3,6 +3,7 @@
 /blogBackend/blog/migrations/*
 /blogBackend/dicom/migrations/*
 /blogBackend/image/migrations/*
+/blogBackend/cars/migrations/*
 /blogBackend/blog/migrations/__pycache__/*
 /blogBackend/backend/dicom/migrations/__pycache__/*
 /blogBackend/backend/image/migrations/__pycache__/*
