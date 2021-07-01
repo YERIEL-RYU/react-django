@@ -52,11 +52,11 @@ const WritePresenter = (props) => {
         onChange={(e)=>onChangeTitle(e)}
         margin="dense"
       />
-      {console.log(quillRef)}
+      {/* {console.log(quillRef)} */}
       <ReactQuill
         id="react-quill"
         style={{ height: "400px", margin: "30px", padding: "10px" }}
-        // ref={(el) => {quillRef.current = el}}
+        ref={quillRef}
         value={value}
         onChange={onChangeValue}
         modules={modules}

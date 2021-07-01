@@ -95,7 +95,13 @@ const WriteContainer = () => {
     }
   
     const onChangeValue = useCallback((e) => {
-      setValue(e);
+      var quill = quillRef.current.getEditor()
+      console.log( quill.getLength())
+      if (quill.getLength() < 451) setValue(e);
+      else{ 
+        quill.deleteText(450, quill.getLength())
+        window.alert('글자수를 초과했습니다');
+      }
     //   console.log(delta)
     }, []);
   
