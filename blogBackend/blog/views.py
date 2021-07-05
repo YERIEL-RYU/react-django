@@ -6,6 +6,9 @@ from .models import Post
 from .serializers import PostSerializer, PostLenSerilizer
 from django.core.files.base import ContentFile
 import base64, secrets
+import shutil
+import os
+from backend.settings import BASE_DIR
 
 from image.models import Image
 
@@ -16,7 +19,7 @@ class PostViewSet(mixins.UpdateModelMixin,
                   #   mixins.ListModelMixin,
                   mixins.RetrieveModelMixin,
                 #   mixins.CreateModelMixin,
-                  mixins.DestroyModelMixin,
+                #   mixins.DestroyModelMixin,
                   viewsets.GenericViewSet):
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
     ordering_fields = ['updated_at']
@@ -77,3 +80,14 @@ class PostViewSet(mixins.UpdateModelMixin,
         Post.objects.create(title=title, body=body, important=important, writer=writer)
         
         return Response({"create":'good'}, status=201)
+
+    def destroy (request, *args, **kwargs) :
+        id= kwargs['pk']
+        post = Post.objects.get(pk=id)
+        print(post)
+        print(BASE_DIR)
+        delete_path = os.path.join(BASE_DIR, 'static_files/post/'+str(post))
+        post.delete()
+        shutil.rmtree(delete_path)
+
+        return Response({"delete":'good'}, status=204)
