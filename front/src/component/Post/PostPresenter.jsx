@@ -1,7 +1,8 @@
 import React from "react";
 import Divider from "@material-ui/core/Divider";
 import Button from "@material-ui/core/Button";
-
+// import "react-quill/dist/quill.snow.css";
+import "./quill.css"
 
 import styled from "styled-components";
 
@@ -43,7 +44,7 @@ const ButtonWrap = styled.div`
   justify-content: space-between;
 `;
 const PostPresenter = (props) => {
-  const { onList, onNext, onPrev, post, onDelete, onModify } = props;
+  const { onList, onNext, onPrev, post, onDelete, onModify, onNewWindow, onModal } = props;
   return (
     <>
       {post !== undefined && (
@@ -55,7 +56,9 @@ const PostPresenter = (props) => {
             <Date>{post.updated_at}</Date>
           </Info>
           <Divider />
-          <Content dangerouslySetInnerHTML={{ __html: post.body }}></Content>
+          <Content dangerouslySetInnerHTML={{ __html: post.body }} id="tss">
+          </Content>
+          {/* {post.body} */}
           <Divider />
           <ButtonContainer>
             <ManageButtonWrap>
