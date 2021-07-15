@@ -8,12 +8,18 @@ import React , {
 import WritePresenter from './WritePresenter';
 import axios from "axios";
 import { useHistory } from "react-router";
-import Quill from 'quill'
+import ReactQuill,{Quill} from "react-quill";
 import QuillImageDropAndPaste from 'quill-image-drop-and-paste'
 import ImageResize from '@looop/quill-image-resize-module-react'
 
 Quill.register('modules/imageDropAndPaste', QuillImageDropAndPaste)
 Quill.register('modules/ImageResize', ImageResize)
+var BackgroundClass = Quill.import('attributors/class/background');
+var ColorClass = Quill.import('attributors/class/color');
+var SizeStyle = Quill.import('attributors/style/size');
+Quill.register(BackgroundClass, true);
+Quill.register(ColorClass, true);
+Quill.register(SizeStyle, true);
 const WriteContainer = () => {
     const history = useHistory();
     const [value, setValue] = useState("");
@@ -42,6 +48,10 @@ const WriteContainer = () => {
         }   
       }
     }
+    const boldHandler = (val) => {
+      const quill = quillRef.current.getEditor();
+      quill.formatText(0,5,'color','blue')
+    }
     const modules = useMemo(()=>({
       toolbar: {
         container: [
@@ -52,11 +62,13 @@ const WriteContainer = () => {
             { list: "ordered" },
             { list: "bullet" },
           ],
+          [{ align: '' }, { align: 'center' }, { align: 'right' }, { align: 'justify' }],
           ["link", "image"],
           ['clean']  
         ],
         handlers : {
-          link : linkHandler
+          link : linkHandler,
+          bold : boldHandler,
         }
       },
       imageDropAndPaste: true,

@@ -2,7 +2,7 @@ import React, { useEffect, useState, useCallback } from 'react';
 
 import styled from 'styled-components'
 
-const CanvasWrapper = styled.div `
+const CanvasWrapper = styled.div`
   && {
     width: 100%;
     
@@ -17,7 +17,7 @@ const CanvasWrapper = styled.div `
   }
 `;
 
-const InfoRowsUp = styled.div `
+const InfoRowsUp = styled.div`
   display: flex;
   justify-content: space-between;
 `;
@@ -27,13 +27,13 @@ const InfoRowsDown = styled(InfoRowsUp)`
   align-items: flex-end;
 `;
 
-const Canvas = styled.canvas `
+const Canvas = styled.canvas`
   width: 100% !important;
-  height: 512px !important;
+  height: 100% !important;
 `;
 
 // **** CSS
-const Container = styled.div `
+const Container = styled.div`
     width: 100% !important;
     height: 100% !important;
     column-gap: 1.5rem;
@@ -42,18 +42,18 @@ const Container = styled.div `
 `;
 
 const ViewPresenter = (props) => {
-  const {onChange,img,uploaded, viewer2, state, onChangePng} = props;
-  
+  const { onChange, img, uploaded, viewer2, state, onChangePng } = props;
 
 
-    return (
-      <>
-        <h1>Dicom Viewer</h1>
-        <input type="file" onChange={onChange}/>
-        {/* <input type="file" accept=".png" onChange={onChangePng}/> */}
-        <button onClick={onChangePng}>prediction</button>
-        <br />
-        <div style={{width:'100%', display:'flex', flexDirection:'row'}}>
+
+  return (
+    <>
+      <h1>Dicom Viewer</h1>
+      <input type="file" onChange={onChange} />
+      {/* <input type="file" accept=".png" onChange={onChangePng}/> */}
+      <button onClick={onChangePng}>prediction</button>
+      <br />
+      <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
         <CanvasWrapper id="viewer">
           <InfoRowsUp>
             <div>
@@ -65,7 +65,7 @@ const ViewPresenter = (props) => {
               <div>SeriesNumber : {state.seriesNumber}</div>
             </div>
           </InfoRowsUp>
-          <Canvas className="cornerstone-canvas"/>
+          <Canvas className="cornerstone-canvas" />
           <InfoRowsDown>
             <div>
               <div>StudyDate : {state.imgStudyDate}</div>
@@ -88,7 +88,7 @@ const ViewPresenter = (props) => {
               <div>SeriesNumber : {state.seriesNumber}</div>
             </div>
           </InfoRowsUp>
-          <Canvas className="cornerstone-canvas"/>
+          <Canvas className="cornerstone-canvas" />
           <InfoRowsDown>
             <div>
               <div>StudyDate : {state.imgStudyDate}</div>
@@ -100,9 +100,9 @@ const ViewPresenter = (props) => {
             </div>
           </InfoRowsDown>
         </CanvasWrapper>
-        </div>
-      </>
-    );
+      </div>
+    </>
+  );
 };
 
 export default ViewPresenter;
