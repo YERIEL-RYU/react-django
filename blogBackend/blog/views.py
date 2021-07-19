@@ -9,6 +9,7 @@ import base64, secrets
 import shutil
 import os
 from backend.settings import BASE_DIR
+from django.http import Http404
 
 from image.models import Image
 
@@ -111,13 +112,28 @@ class ReplyViewSet(mixins.UpdateModelMixin,
 
         # post_serializer = PostLenSerilizer(id=post_id)
         # print(post_serializer)
-        query = Post.objects.get(id=post_id)
-        # queryset = Reply.objects.get(post=post_id)
+
         
         try :
-            # serializer = ReplySerializer(queryset)
+            query = Post.objects.get(id=post_id)
+            queryset = Reply.objects.get(post=post_id)
+            serializer = ReplySerializer(queryset)
             # print(serializer.data)
+
+            if serializer.data :
+                return Response({'error' : '이미 등록됨'}, status=400)
+
             return Response({'post' : 'good'}, status=201)
+
+        except Post.DoesNotExist : 
+            return Response({'error':'못된 요청이당ㅋs'}, status=404)
+        except Reply.DoesNotExist : 
+            serializer = ReplySerializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=201)
+
+            return Response({'error':'not found'}, status=404)
         
         except :
             return Response({'error':'not found'}, status=404)
