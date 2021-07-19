@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework import viewsets, mixins, generics
 from rest_framework.response import Response
 from rest_framework import filters
-from .models import Post
-from .serializers import PostSerializer, PostLenSerilizer
+from .models import Post, Reply
+from .serializers import PostSerializer, PostLenSerilizer, ReplySerializer
 from django.core.files.base import ContentFile
 import base64, secrets
 import shutil
@@ -91,3 +91,33 @@ class PostViewSet(mixins.UpdateModelMixin,
         shutil.rmtree(delete_path)
 
         return Response({"delete":'good'}, status=204)
+
+
+class ReplyViewSet(mixins.UpdateModelMixin,
+                mixins.ListModelMixin,
+                mixins.RetrieveModelMixin,
+                # mixins.CreateModelMixin,
+                mixins.DestroyModelMixin,
+                viewsets.GenericViewSet):
+    
+    ordering_fields = ['updated_at']
+    pagination_class = None
+    queryset = Reply.objects.all()
+    serializer_class = ReplySerializer
+
+    def create(self, request, *args):
+        post_id = self.get_serializer(data=request.data).initial_data['post']
+        print(post_id)
+
+        # post_serializer = PostLenSerilizer(id=post_id)
+        # print(post_serializer)
+        query = Post.objects.get(id=post_id)
+        # queryset = Reply.objects.get(post=post_id)
+        
+        try :
+            # serializer = ReplySerializer(queryset)
+            # print(serializer.data)
+            return Response({'post' : 'good'}, status=201)
+        
+        except :
+            return Response({'error':'not found'}, status=404)

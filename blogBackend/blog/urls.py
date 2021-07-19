@@ -8,6 +8,10 @@ app_name = 'post'
 post_router = DefaultRouter()
 post_router.register(r'', views.PostViewSet)
 
+reply_router = DefaultRouter()
+reply_router.register(r'', views.ReplyViewSet)
+
 urlpatterns = [
-    path('', include(post_router.urls))
+    path('blog/', include(post_router.urls)),
+    path('reply/', include(reply_router.urls))
 ]

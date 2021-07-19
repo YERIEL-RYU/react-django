@@ -12,6 +12,7 @@ import Register from "./component/Auth/RegisterPage";
 import SortTable from "./component/SortTable";
 import View from "./component/View";
 import Carousel from "./component/Carousel/Carousel";
+import ImageQuill from './component/WriteTest';
 
 const App = () => {
   return (
@@ -28,6 +29,7 @@ const App = () => {
           <Route path="/sorttable" component={SortTable} />
           <Route path="/viewer" component={View} />
           <Route path="/carousel" component={Carousel} />
+          <Route path="/test" component={ImageQuill} />
         </Switch>
       </Layout>
     </BrowserRouter>

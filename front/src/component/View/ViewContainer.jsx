@@ -11,6 +11,7 @@ import cornerstoneWebImageLoader from 'cornerstone-web-image-loader';
 import cornerstoneMath from 'cornerstone-math';
 import * as dicomParser from 'dicom-parser';
 import Hammer from 'hammerjs';
+import html2canvas from 'html2canvas';
 
 const ViewContainer = () => {
   const BASE_URL = 'localhost:8000/'
@@ -212,6 +213,26 @@ const ViewContainer = () => {
     }
   }, [viewer2, img])
 
+  const onCapture = () => {
+    const viewer = document.getElementById('viewer');
+    html2canvas(viewer).then(canvas => {
+      onSaveAs(canvas.toDataURL('image/png'), "capture-test.png")
+    })
+  }
+
+  const onSaveAs = (uri, filename) => {
+    var link = document.createElement('a');
+    if (typeof link.download === 'string') {
+      link.href = uri;
+      link.download = filename;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      window.open(uri);
+    }
+  }
+
   return (
     <ViewPresenter
       onChange={onChange}
@@ -220,6 +241,7 @@ const ViewContainer = () => {
       viewer2={viewer2}
       state={state}
       onChangePng={onChangePng}
+      onCapture={onCapture}
     />
   );
 };

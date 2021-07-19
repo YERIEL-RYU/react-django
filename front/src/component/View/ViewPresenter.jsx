@@ -42,7 +42,7 @@ const Container = styled.div`
 `;
 
 const ViewPresenter = (props) => {
-  const { onChange, img, uploaded, viewer2, state, onChangePng } = props;
+  const { onChange, img, uploaded, viewer2, state, onChangePng, onCapture } = props;
 
 
 
@@ -52,6 +52,7 @@ const ViewPresenter = (props) => {
       <input type="file" onChange={onChange} />
       {/* <input type="file" accept=".png" onChange={onChangePng}/> */}
       <button onClick={onChangePng}>prediction</button>
+      <button onClick={onCapture}>다운로드</button>
       <br />
       <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
         <CanvasWrapper id="viewer">
