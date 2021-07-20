@@ -53,6 +53,11 @@ const ViewPresenter = (props) => {
       {/* <input type="file" accept=".png" onChange={onChangePng}/> */}
       <button onClick={onChangePng}>prediction</button>
       <button onClick={onCapture}>다운로드</button>
+      <button onClick={onCapture}>다운로드</button>
+      <button onClick={() => console.log('iamge1')}>image1</button>
+      <button onClick={() => console.log('iamge2')}>image2</button>
+      <button onClick={() => console.log('iamge3')}>image3</button>
+      <button onClick={() => console.log('iamge4')}>image4</button>
       <br />
       <div style={{ width: '100%', display: 'flex', flexDirection: 'row' }}>
         <CanvasWrapper id="viewer">

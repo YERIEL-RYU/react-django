@@ -16,7 +16,10 @@ import html2canvas from 'html2canvas';
 const ViewContainer = () => {
   const BASE_URL = 'localhost:8000/'
   const [img, setImg] = useState()
+  const [viewer1, setViewer1] = useState()
   const [viewer2, setViewer2] = useState()
+  const [viewer3, setViewer3] = useState()
+  const [viewer4, setViewer4] = useState()
   const [uploaded, setUploaded] = useState(false)
   const [state, setState] = useState({});
 
@@ -45,7 +48,10 @@ const ViewContainer = () => {
     // console.log(fileUrl)
     // fileUrl = 'wadouri:' + fileUrl
     // console.log(fileUrl)
-    setViewer2('http://localhost:8000/media/ArtBoard.png/')
+    setViewer1('http://localhost:8000/media/image1.png/')
+    setViewer2('http://localhost:8000/media/image2.png/')
+    setViewer3('http://localhost:8000/media/image3.png/')
+    setViewer4('http://localhost:8000/media/image4.png/')
   }
 
 
@@ -141,7 +147,7 @@ const ViewContainer = () => {
             element
           });
           cornerstone.displayImage(element, image, viewport);
-          cornerstone.setMaximumSizeBytes(element)
+          // cornerstone.setMaximumSizeBytes(element)
           console.log(viewport.displayedArea)
           viewport.displayedArea.rowPixelSpacing = 1;
           viewport.displayedArea.columnPixelSpacing = 1;
@@ -156,7 +162,7 @@ const ViewContainer = () => {
   useEffect(() => {
     const element = document.getElementById('deeplearning-viewer');
     cornerstone.enable(element);
-    if (viewer2 !== undefined) {
+    if (viewer1 !== undefined && viewer2 !== undefined && viewer3 !== undefined && viewer4 !== undefined) {
 
       const layers = [
         {
@@ -166,7 +172,49 @@ const ViewContainer = () => {
           }
         },
         {
+          imageId: viewer1,
+          option: {
+            name: 'PNG',
+            opacity: 0.2,
+            viewport: {
+              colormap: 'hotIron',
+              voi: {
+                windowWidth: 30,
+                windowCenter: 16
+              }
+            }
+          }
+        },
+        {
           imageId: viewer2,
+          option: {
+            name: 'PNG',
+            opacity: 0.2,
+            viewport: {
+              colormap: 'hotIron',
+              voi: {
+                windowWidth: 30,
+                windowCenter: 16
+              }
+            }
+          }
+        },
+        {
+          imageId: viewer3,
+          option: {
+            name: 'PNG',
+            opacity: 0.2,
+            viewport: {
+              colormap: 'hotIron',
+              voi: {
+                windowWidth: 30,
+                windowCenter: 16
+              }
+            }
+          }
+        },
+        {
+          imageId: viewer4,
           option: {
             name: 'PNG',
             opacity: 0.2,
@@ -211,7 +259,7 @@ const ViewContainer = () => {
       //     cornerstone.displayImage(element, image);
       // });
     }
-  }, [viewer2, img])
+  }, [viewer1, viewer2, viewer3, viewer4, img])
 
   const onCapture = () => {
     const viewer = document.getElementById('viewer');

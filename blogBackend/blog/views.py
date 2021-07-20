@@ -10,6 +10,7 @@ import shutil
 import os
 from backend.settings import BASE_DIR
 from django.http import Http404
+from django.db import transaction
 
 from image.models import Image
 
@@ -97,40 +98,40 @@ class PostViewSet(mixins.UpdateModelMixin,
 class ReplyViewSet(mixins.UpdateModelMixin,
                 mixins.ListModelMixin,
                 mixins.RetrieveModelMixin,
-                # mixins.CreateModelMixin,
                 mixins.DestroyModelMixin,
                 viewsets.GenericViewSet):
     
     ordering_fields = ['updated_at']
+    filter_backends = [filters.OrderingFilter, filters.SearchFilter]
+    search_fields = ['post_id','answer_content']
     pagination_class = None
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer
 
+    @transaction.atomic
     def create(self, request, *args):
         post_id = self.get_serializer(data=request.data).initial_data['post']
-        print(post_id)
-
-        # post_serializer = PostLenSerilizer(id=post_id)
-        # print(post_serializer)
-
         
         try :
             query = Post.objects.get(id=post_id)
             queryset = Reply.objects.get(post=post_id)
             serializer = ReplySerializer(queryset)
-            # print(serializer.data)
 
             if serializer.data :
                 return Response({'error' : '이미 등록됨'}, status=400)
 
-            return Response({'post' : 'good'}, status=201)
 
         except Post.DoesNotExist : 
-            return Response({'error':'못된 요청이당ㅋs'}, status=404)
+            return Response({'error':'post를 찾을 수 없음'}, status=404)
+
         except Reply.DoesNotExist : 
             serializer = ReplySerializer(data=request.data)
+            
             if serializer.is_valid():
                 serializer.save()
+
+                query.reply_check = True
+                query.save()
                 return Response(serializer.data, status=201)
 
             return Response({'error':'not found'}, status=404)
