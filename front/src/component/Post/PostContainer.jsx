@@ -9,7 +9,7 @@ const PostContainer = () => {
   const postId = Number(localStorage.getItem("postId"));
   const listLen = localStorage.getItem("postLen");
 
-  const url = `http://localhost:8000/post/${postId}/`;
+  const url = `http://localhost:8000/post/blog/${postId}/`;
 
   const [post, setPost] = useState();
 

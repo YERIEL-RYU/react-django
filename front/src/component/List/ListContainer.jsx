@@ -5,7 +5,7 @@ import { useHistory } from "react-router";
 
 const ListContainer = () => {
   const history = useHistory();
-  const url = `http://localhost:8000/post/?ordering=-updated_at`;
+  const url = `http://localhost:8000/post/blog/?ordering=-updated_at`;
   const [posts, setPosts] = useState([]);
   const onWrite = () => {
     history.push("/write");

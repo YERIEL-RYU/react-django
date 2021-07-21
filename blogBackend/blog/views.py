@@ -103,7 +103,7 @@ class ReplyViewSet(mixins.UpdateModelMixin,
     
     ordering_fields = ['updated_at']
     filter_backends = [filters.OrderingFilter, filters.SearchFilter]
-    search_fields = ['post_id','answer_content']
+    search_fields = ['post__id']
     pagination_class = None
     queryset = Reply.objects.all()
     serializer_class = ReplySerializer

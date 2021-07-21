@@ -13,6 +13,7 @@ import SortTable from "./component/SortTable";
 import View from "./component/View";
 import Carousel from "./component/Carousel/Carousel";
 import ImageQuill from './component/WriteTest';
+import HtmlToPng from "./component/Test/HtmlToPng";
 
 const App = () => {
   return (
@@ -22,14 +23,14 @@ const App = () => {
           <Route exact path="/" component={List} />
           <Route path="/post" component={Post} />
           <Route path="/write" component={Write} />
-          <Route path="/test" component={Test} />
+          <Route path="/test" component={HtmlToPng} />
           <Route path="/quill" component={Quill} />
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
           <Route path="/sorttable" component={SortTable} />
           <Route path="/viewer" component={View} />
           <Route path="/carousel" component={Carousel} />
-          <Route path="/test" component={ImageQuill} />
+          <Route path="/quilltest" component={ImageQuill} />
         </Switch>
       </Layout>
     </BrowserRouter>
