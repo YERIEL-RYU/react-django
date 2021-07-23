@@ -14,6 +14,7 @@ import View from "./component/View";
 import Carousel from "./component/Carousel/Carousel";
 import ImageQuill from './component/WriteTest';
 import HtmlToPng from "./component/Test/HtmlToPng";
+import Searchbar from './component/Test/SearchBarTest'
 
 const App = () => {
   return (
@@ -31,6 +32,7 @@ const App = () => {
           <Route path="/viewer" component={View} />
           <Route path="/carousel" component={Carousel} />
           <Route path="/quilltest" component={ImageQuill} />
+          <Route path="/searchbar" component={Searchbar} />
         </Switch>
       </Layout>
     </BrowserRouter>
