@@ -4,6 +4,8 @@ import Container from '@material-ui/core/Container';
 import Divider from '@material-ui/core/Divider';
 import { Link } from 'react-router-dom';
 import Slideshow from "../Slideshow/Slideshow"
+import Tab from '../Tab/Tab';
+
 
 
 import styled from 'styled-components';
@@ -21,18 +23,20 @@ const Post = styled(Link)`
 
 const index = (props) => {
   console.log(props);
+
   return (
     <>
       <CssBaseline />
       <Container maxWidth="lg">
         <Header className="header">
-          <Post to="/">POST</Post>
+          <Post to="/">YERIEL REACT TEST PAGE</Post>
         </Header>
         <Divider />
-        <Slideshow />
+        {/* <Slideshow /> */}
         <Title className="title">
           <h3>공지사항</h3>
         </Title>
+        <Tab />
         {props.children}
       </Container>
     </>

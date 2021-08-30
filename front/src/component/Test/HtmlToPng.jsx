@@ -41,6 +41,7 @@ const HtmlToPng = () => {
                 </div>
             </Div>
             <button onClick={onCapture}>click</button>
+            <textarea style={{ resize: 'none' }} />
         </>
     );
 

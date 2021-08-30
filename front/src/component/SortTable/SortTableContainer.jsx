@@ -1,6 +1,6 @@
 //SortTableContainer.jsx
 
-import React, {useState} from 'react';
+import React, { useEffect, useState } from 'react';
 import SortTablePresenter from './SortTablePresenter';
 
 const SortTableContainer = () => {
@@ -37,9 +37,13 @@ const SortTableContainer = () => {
       ? (a, b) => desc(a, b, sequenceBy)
       : (a, b) => -desc(a, b, sequenceBy);
   };
-  
+
+  useEffect(() => {
+    localStorage.setItem("debug", "cornerstoneTools")
+  })
+
   return (
-    <SortTablePresenter 
+    <SortTablePresenter
       order={order}
       orderBy={orderBy}
       handleRequestSort={handleRequestSort}

@@ -51,20 +51,12 @@ const SearchBarTest = () => {
     return (
         <ToolbarContainer>
             <ListCount count={data.length} />
-            <SearchContainer>
-                <CustomSqureButton color="#008000" width="50px"><FontAwesomeIcon icon={faDownload} /></CustomSqureButton>
-                <SelectOption
-                    selectValue={selectValue}
-                    onSelectValueChange={onSelectValueChange}
-                    selectItem={selectItem}
-                />
-                <SearchToolbar
-                    searchValue={searchValue}
-                    onSearchValueChange={onSearchValueChange}
-                    onSearch={onSearch}
-                    onSearchValueReset={onSearchReset}
-                />
-            </SearchContainer>
+            <SearchToolbar
+                searchValue={searchValue}
+                onSearchValueChange={onSearchValueChange}
+                onSearch={onSearch}
+                onSearchValueReset={onSearchReset}
+            />
         </ToolbarContainer>
     );
 };
